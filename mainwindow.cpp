@@ -6,6 +6,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QStandardItemModel>
+#include <QStandardItem>
 #include <QStringListModel>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,6 +39,7 @@ void MainWindow::on_pushButtonUpdate_clicked()
 // リストビューアイテム選択
 void MainWindow::on_listViewImgList_pressed(const QModelIndex &index)
 {
+    // 画像をビューに表示
     ShowImage(index);
 }
 
@@ -60,19 +62,23 @@ QStringList MainWindow::FindFilesList(const QString& path)
 bool MainWindow::SetList(const QStringList &list)
 {
     // 設定モデルの取得
-    QStringListModel *oldModel = qobject_cast<QStringListModel *>(ui->listViewImgList->model());
+    QStandardItemModel *oldModel = qobject_cast<QStandardItemModel *>(ui->listViewImgList->model());
     // リストビューのクリア
     if (oldModel) {
         oldModel->removeRows(0, oldModel->rowCount());
     }
 
-    QStringListModel *newModel = new QStringListModel();
+    QStandardItemModel *newModel = new QStandardItemModel();
     if (!newModel) {
         Q_ASSERT(false);
         return false;
     }
-    // テキストアイテムの追加
-    newModel->setStringList(list);
+
+    foreach (QString str, list) {
+        QStandardItem *item = new QStandardItem();
+        item->setText(str);
+        newModel->appendRow(item);
+    }
 
     // モデルを設定
     ui->listViewImgList->setModel(newModel);
@@ -84,7 +90,7 @@ bool MainWindow::SetList(const QStringList &list)
 // リストビューで選択したアイテムの画像を表示
 void MainWindow::ShowImage(const QModelIndex &index)
 {
-    QStringListModel *model = qobject_cast<QStringListModel *>(ui->listViewImgList->model());
+    QStandardItemModel *model = qobject_cast<QStandardItemModel *>(ui->listViewImgList->model());
     if (!model) {
         Q_ASSERT(false);
         return;
@@ -106,6 +112,6 @@ void MainWindow::SetImage(const QString &imgPath)
 
     // SceneをGraphicsViewに設定
     QGraphicsScene *newScene = new QGraphicsScene();
-    newScene->addPixmap(pixmap.scaledToHeight(199));
+    newScene->addPixmap(pixmap.scaledToHeight(195));
     ui->graphicsView->setScene(newScene);
 }
