@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>666</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>381</width>
+      <width>271</width>
       <height>231</height>
      </rect>
     </property>
@@ -41,9 +41,19 @@
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>190</y>
+      <y>300</y>
       <width>200</width>
       <height>200</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="listViewImgList_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>271</width>
+      <height>231</height>
      </rect>
     </property>
    </widget>
@@ -53,7 +63,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>666</width>
      <height>21</height>
     </rect>
    </property>
