@@ -22,8 +22,10 @@ public:
 private slots:
     // 更新ボタンクリック
     void on_pushButtonUpdate_clicked();
-
+    // 画像をコピー
+    void on_pushButtonCopy_clicked();
     void on_listViewImgList_pressed(const QModelIndex &index);
+
 
 private:
     // path内ののファイル名の文字列リストを生成
@@ -37,5 +39,6 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    QModelIndex m_selectItemIndex;
 };
 #endif // MAINWINDOW_H
