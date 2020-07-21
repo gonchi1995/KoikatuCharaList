@@ -4,8 +4,10 @@
 #include <QMainWindow>
 #include <QListView>
 
-#define SRC_PATH    "D:\\Games\\illusion\\Koikatu_\\UserData\\chara\\female"
-#define DST_PATH    "D:\\Games\\illusion\\Koikatu\\UserData\\chara\\female"
+#define SRC_PATH    "D:\\Games\\illusion\\Koikatu_\\UserData\\chara\\female"    // 送信元ディレクトリ
+#define DST_PATH    "D:\\Games\\illusion\\Koikatu\\UserData\\chara\\female"     // 送信先ディレクトリ
+
+#define DELIMITER   "\\"    // デリミタ
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
