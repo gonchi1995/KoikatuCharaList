@@ -41,6 +41,5 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    QModelIndex m_selectItemIndex;
 };
 #endif // MAINWINDOW_H

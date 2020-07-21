@@ -54,9 +54,10 @@ void MainWindow::on_pushButtonCopy_clicked()
     }
 
     // 画像パス、画像ファイル名を取得
-    QString srcImagePath = model->data(m_selectItemIndex).toString();
+    QModelIndex index = ui->listViewImgList->selectionModel()->currentIndex();
+    QString srcImagePath = reinterpret_cast<MyStandardItem *>(model->itemFromIndex(index))->getUrl();
     QStringList srcImagePathSplit = srcImagePath.split("\\");
-    QString imageFileName = srcImagePathSplit[srcImagePathSplit.size() - 1];
+    QString imageFileName = srcImagePathSplit.last();
 
     // 出力先画像パス取得
     QStringList dstImagePathSplit = QString(DST_PATH).split("\\");
@@ -80,8 +81,24 @@ void MainWindow::on_pushButtonCopy_clicked()
             QFile::copy(srcImagePath, dstImagePath);    // コピー
         }
     } else {
+        // ファイルをコピーした旨を知らせるメッセージボックス
+        QMessageBox msgBox;
+
+        msgBox.setText(QString::fromUtf8("ファイルをコピーしました"));
+        msgBox.setWindowTitle(QString::fromUtf8("ファイルコピー"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+
+        msgBox.exec();
+
         QFile::copy(srcImagePath, dstImagePath);    // コピー
     }
+
+    // 送信先のリストビューを更新
+    QStringList imageFilesList2;
+    imageFilesList2 = FindFilesList(DST_PATH);
+    SetList(*(ui->listViewImgList_2), imageFilesList2);
 }
 
 // リストビューアイテム選択
@@ -89,7 +106,6 @@ void MainWindow::on_listViewImgList_pressed(const QModelIndex &index)
 {
     // 画像をビューに表示
     ShowImage(index);
-    m_selectItemIndex = index;
 }
 
 // 指定パスのファイルリスト
