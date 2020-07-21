@@ -4,8 +4,10 @@
 #include <QMainWindow>
 #include <QListView>
 
-#define SRC_PATH    "D:\\Games\\illusion\\Koikatu_\\UserData\\chara\\female"
-#define DST_PATH    "D:\\Games\\illusion\\Koikatu\\UserData\\chara\\female"
+#define SRC_PATH    "D:\\Games\\illusion\\Koikatu_\\UserData\\chara\\female"    // 送信元ディレクトリ
+#define DST_PATH    "D:\\Games\\illusion\\Koikatu\\UserData\\chara\\female"     // 送信先ディレクトリ
+
+#define DELIMITER   "\\"    // デリミタ
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,8 +24,10 @@ public:
 private slots:
     // 更新ボタンクリック
     void on_pushButtonUpdate_clicked();
-
+    // 画像をコピー
+    void on_pushButtonCopy_clicked();
     void on_listViewImgList_pressed(const QModelIndex &index);
+
 
 private:
     // path内ののファイル名の文字列リストを生成
