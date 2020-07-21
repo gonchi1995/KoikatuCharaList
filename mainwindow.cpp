@@ -10,6 +10,8 @@
 #include <QStringListModel>
 #include <QMessageBox>
 
+#include "MyStandardItem.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -121,9 +123,12 @@ bool MainWindow::SetList(QListView &view, const QStringList &list)
         return false;
     }
 
-    foreach (QString str, list) {
-        QStandardItem *item = new QStandardItem();
-        item->setText(str);
+    foreach (QString url, list) {
+        MyStandardItem *item = new MyStandardItem;
+        QStringList urlsplit = url.split(DELIMITER);
+        QString fileName = urlsplit.last();
+        item->setUrl(url);
+        item->setText(fileName);
         newModel->appendRow(item);
     }
 
@@ -143,7 +148,8 @@ void MainWindow::ShowImage(const QModelIndex &index)
         return;
     }
 
-    QString imagePath = model->data(index).toString();
+    MyStandardItem *item = reinterpret_cast<MyStandardItem *>(model->itemFromIndex(index));
+    QString imagePath = item->getUrl();
     SetImage(imagePath);
 }
 
