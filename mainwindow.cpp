@@ -26,9 +26,13 @@ void MainWindow::on_pushButtonUpdate_clicked()
 {
     bool ret = false;
     QStringList imageFilesList;
+    QStringList imageFilesList2;
 
     imageFilesList = FindFilesList(SRC_PATH);
-    ret = SetList(imageFilesList);
+    imageFilesList2 = FindFilesList(DST_PATH);
+    SetList(*(ui->listViewImgList), imageFilesList);
+    SetList(*(ui->listViewImgList_2), imageFilesList2);
+
 
     qDebug() << ret;
 //    foreach(QString debugStr, imageFilesList) {
@@ -59,10 +63,10 @@ QStringList MainWindow::FindFilesList(const QString& path)
 }
 
 // リストをリストビューに設定
-bool MainWindow::SetList(const QStringList &list)
+bool MainWindow::SetList(QListView &view, const QStringList &list)
 {
     // 設定モデルの取得
-    QStandardItemModel *oldModel = qobject_cast<QStandardItemModel *>(ui->listViewImgList->model());
+    QStandardItemModel *oldModel = qobject_cast<QStandardItemModel *>(view.model());
     // リストビューのクリア
     if (oldModel) {
         oldModel->removeRows(0, oldModel->rowCount());
@@ -81,8 +85,8 @@ bool MainWindow::SetList(const QStringList &list)
     }
 
     // モデルを設定
-    ui->listViewImgList->setModel(newModel);
-    ui->listViewImgList->setEditTriggers(QAbstractItemView::NoEditTriggers);    // ダブルクリックによる編集を禁止
+    view.setModel(newModel);
+    view.setEditTriggers(QAbstractItemView::NoEditTriggers);    // ダブルクリックによる編集を禁止
 
     return true;
 }

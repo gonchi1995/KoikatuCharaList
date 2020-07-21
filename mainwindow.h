@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListView>
 
 #define SRC_PATH    "D:\\Games\\illusion\\Koikatu_\\UserData\\chara\\female"
 #define DST_PATH    "D:\\Games\\illusion\\Koikatu\\UserData\\chara\\female"
@@ -28,7 +29,7 @@ private:
     // path内ののファイル名の文字列リストを生成
     QStringList FindFilesList(const QString &path);
     // listをListViewに登録
-    bool SetList(const QStringList &list);
+    bool SetList(QListView &view, const QStringList &list);
 
     void ShowImage(const QModelIndex &index);
 
