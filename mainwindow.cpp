@@ -9,6 +9,8 @@
 #include <QStandardItem>
 #include <QStringListModel>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "MyStandardItem.h"
 
@@ -27,7 +29,6 @@ MainWindow::~MainWindow()
 // 更新ボタン押下
 void MainWindow::on_pushButtonUpdate_clicked()
 {
-    bool ret = false;
     QStringList imageFilesList;
     QStringList imageFilesList2;
 
@@ -35,53 +36,25 @@ void MainWindow::on_pushButtonUpdate_clicked()
     imageFilesList2 = FindFilesList(DST_PATH);
     SetList(*(ui->listViewImgList), imageFilesList);
     SetList(*(ui->listViewImgList_2), imageFilesList2);
-
-
-    qDebug() << ret;
-//    foreach(QString debugStr, imageFilesList) {
-//        qDebug() << debugStr;
-//    }
 }
 
-// 画像をコピー
+// 画像コピーボタン押下
 void MainWindow::on_pushButtonCopy_clicked()
 {
-    // アイテムモデルを取得
-    QStandardItemModel *model = qobject_cast<QStandardItemModel *>(ui->listViewImgList->model());
-    if (!model) {
-        Q_ASSERT(false);
-        return;
-    }
+    // 画像をコピーする
+    CopyImage();
+}
 
-    // 画像パス、画像ファイル名を取得
-    QString srcImagePath = model->data(m_selectItemIndex).toString();
-    QStringList srcImagePathSplit = srcImagePath.split("\\");
-    QString imageFileName = srcImagePathSplit[srcImagePathSplit.size() - 1];
+// 参照ボタン（送信元）押下
+void MainWindow::on_pushButtonRefSrc_clicked()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(SRC_PATH));
+}
 
-    // 出力先画像パス取得
-    QStringList dstImagePathSplit = QString(DST_PATH).split("\\");
-    dstImagePathSplit << imageFileName;
-    QString dstImagePath = dstImagePathSplit.join("\\");
-
-    QFile dstFile(dstImagePath);
-
-    // ファイルコピー
-    if (dstFile.exists()) {
-        // ファイルが存在する場合は確認メッセージボックスを表示する
-        QMessageBox msgBox;
-
-        msgBox.setText(QString::fromUtf8("ファイルが存在します"));
-        msgBox.setWindowTitle(QString::fromUtf8("ファイルあり"));
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        msgBox.setDefaultButton(QMessageBox::No);
-
-        if ((msgBox.exec() == QMessageBox::Yes)) {
-            QFile::copy(srcImagePath, dstImagePath);    // コピー
-        }
-    } else {
-        QFile::copy(srcImagePath, dstImagePath);    // コピー
-    }
+// 参照ボタン（送信先）押下
+void MainWindow::on_pushButtonRefDst_clicked()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(DST_PATH));
 }
 
 // リストビューアイテム選択
@@ -89,7 +62,6 @@ void MainWindow::on_listViewImgList_pressed(const QModelIndex &index)
 {
     // 画像をビューに表示
     ShowImage(index);
-    m_selectItemIndex = index;
 }
 
 // 指定パスのファイルリスト
@@ -167,5 +139,63 @@ void MainWindow::SetImage(const QString &imgPath)
     QGraphicsScene *newScene = new QGraphicsScene();
     newScene->addPixmap(pixmap.scaledToHeight(195));
     ui->graphicsView->setScene(newScene);
+}
+
+// 画像をコピー処理
+void MainWindow::CopyImage()
+{
+    // アイテムモデルを取得
+    QStandardItemModel *model = qobject_cast<QStandardItemModel *>(ui->listViewImgList->model());
+    if (!model) {
+        Q_ASSERT(false);
+        return;
+    }
+
+    // 画像パス、画像ファイル名を取得
+    QModelIndex index = ui->listViewImgList->selectionModel()->currentIndex();
+    QString srcImagePath = reinterpret_cast<MyStandardItem *>(model->itemFromIndex(index))->getUrl();
+    QStringList srcImagePathSplit = srcImagePath.split("\\");
+    QString imageFileName = srcImagePathSplit.last();
+
+    // 出力先画像パス取得
+    QStringList dstImagePathSplit = QString(DST_PATH).split("\\");
+    dstImagePathSplit << imageFileName;
+    QString dstImagePath = dstImagePathSplit.join("\\");
+
+    QFile dstFile(dstImagePath);
+
+    // ファイルコピー
+    if (dstFile.exists()) {
+        // ファイルが存在する場合は確認メッセージボックスを表示する
+        QMessageBox msgBox;
+
+        msgBox.setText(QString::fromUtf8("ファイルが存在します"));
+        msgBox.setWindowTitle(QString::fromUtf8("ファイルあり"));
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
+
+        if ((msgBox.exec() == QMessageBox::Yes)) {
+            QFile::copy(srcImagePath, dstImagePath);    // コピー
+        }
+    } else {
+        // ファイルをコピーした旨を知らせるメッセージボックス
+        QMessageBox msgBox;
+
+        msgBox.setText(QString::fromUtf8("ファイルをコピーしました"));
+        msgBox.setWindowTitle(QString::fromUtf8("ファイルコピー"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+
+        msgBox.exec();
+
+        QFile::copy(srcImagePath, dstImagePath);    // コピー
+    }
+
+    // 送信先のリストビューを更新
+    QStringList imageFilesList2;
+    imageFilesList2 = FindFilesList(DST_PATH);
+    SetList(*(ui->listViewImgList_2), imageFilesList2);
 }
 
