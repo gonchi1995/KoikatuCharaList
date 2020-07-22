@@ -29,6 +29,8 @@ private slots:
     void on_listViewImgList_pressed(const QModelIndex &index);
 
 
+    void on_pushButtonRefDst_clicked();
+
 private:
     // path内ののファイル名の文字列リストを生成
     QStringList FindFilesList(const QString &path);
