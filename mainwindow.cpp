@@ -9,6 +9,8 @@
 #include <QStandardItem>
 #include <QStringListModel>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "MyStandardItem.h"
 
@@ -27,7 +29,6 @@ MainWindow::~MainWindow()
 // 更新ボタン押下
 void MainWindow::on_pushButtonUpdate_clicked()
 {
-    bool ret = false;
     QStringList imageFilesList;
     QStringList imageFilesList2;
 
@@ -42,6 +43,18 @@ void MainWindow::on_pushButtonCopy_clicked()
 {
     // 画像をコピーする
     CopyImage();
+}
+
+// 参照ボタン（送信元）押下
+void MainWindow::on_pushButtonRefSrc_clicked()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(SRC_PATH));
+}
+
+// 参照ボタン（送信先）押下
+void MainWindow::on_pushButtonRefDst_clicked()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(DST_PATH));
 }
 
 // リストビューアイテム選択

@@ -27,19 +27,17 @@ private slots:
     // 画像をコピー
     void on_pushButtonCopy_clicked();
     void on_listViewImgList_pressed(const QModelIndex &index);
-
-
     void on_pushButtonRefDst_clicked();
+    void on_pushButtonRefSrc_clicked();
 
 private:
     // path内ののファイル名の文字列リストを生成
     QStringList FindFilesList(const QString &path);
     // listをListViewに登録
     bool SetList(QListView &view, const QStringList &list);
-
     void ShowImage(const QModelIndex &index);
-
     void SetImage(const QString &imgPath);
+    void CopyImage();
 
 private:
     Ui::MainWindow *ui;
